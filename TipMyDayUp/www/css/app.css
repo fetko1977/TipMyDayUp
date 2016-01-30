@@ -1,0 +1,113 @@
+.spinner {
+    display: none;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    z-index: 300;
+}
+
+.spinnerBackground {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    background-color: #000000;
+    opacity: 0.3;
+}
+
+.spinnerSpinner {
+    position: absolute;
+    left: 50%;
+    margin-left: -40px;
+    margin-top: -40px;
+    top: 50%;
+    width: 80px;
+    height: 80px;
+}
+
+.spinnerSpinner svg {
+    width: 80px;
+    height: 80px;
+    stroke: #b59751;
+}
+
+.bar.bar-balanced {
+    background: rgba(0, 110, 3, 0.85);
+    border-bottom: 1px solid #fff;
+}
+
+.bar.bar-balanced.menu-bar {
+    background: rgba(47, 47, 47, 1);
+    border-bottom: 1px solid #fff;
+}
+
+.bar.bar-balanced .title {
+    text-shadow: 1px 1px 3px #000;
+    text-align: left;
+    padding-left: 6px;
+}
+
+.bar-balanced .button {
+    text-shadow: 1px 1px 3px #000;
+}
+
+.menu.menu-left {
+    background: rgba(65, 65, 65, 1);
+}
+
+.item-complex {
+    border: none;
+}
+
+.item-complex .item-content {
+    background: rgba(65, 65, 65, 1);
+    color: #fff;
+    border: none;
+    text-shadow: 1px 1px 3px #000;
+}
+
+.item-complex .item-content:hover,
+.item-complex .item-content:active,
+.item-complex .item-content:visited {
+    text-decoration: none;
+    background: rgba(65, 65, 65, 1);
+}
+
+.home-content {
+    
+}
+
+.tips-by-date-content {
+
+}
+
+.tips-by-date-content .tips-by-date-items-wrapper {
+
+}
+
+.home-content .tips-home-items-wrapper .item,
+.tips-by-date-content .tips-by-date-items-wrapper .item {
+    border: none;
+    box-shadow: 1px 1px 3px #000;
+}
+
+.home-content .tips-home-items-wrapper .item,
+.tips-by-date-content .tips-by-date-items-wrapper .item {
+    padding: 0;
+    margin-bottom: 10px;
+}
+
+.home-content .tips-home-items-wrapper .item .row,
+.tips-by-date-content .tips-by-date-items-wrapper .item .row {
+    margin: 0;      
+}
+
+.home-content .tips-home-items-wrapper .tip-header,
+.tips-by-date-content .tips-by-date-items-wrapper .tip-header  {
+    background: rgba(0, 55, 125, 0.85);
+    color: #fff;
+    text-shadow: 1px 1px 3px #000;
+}

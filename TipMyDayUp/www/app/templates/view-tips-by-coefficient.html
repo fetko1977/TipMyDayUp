@@ -1,0 +1,35 @@
+﻿<ion-view view-title="Tips By Coefficient">
+    <ion-content class="padding">
+        <ion-refresher on-refresh="refresh(true)" spinner="android"></ion-refresher>
+            <label class="item item-input item-select">
+                <span class="input-label">
+                    Select Coeficient:
+                </span>
+                <select name="tipCoefficientSelector" id="tipCoefficientSelector" ng-model="coefficientSelector" ng-change="getTipsByCoefficient()">
+                    <option ng-selected="{{coeficient === coefficientSelector}}" ng-repeat="coeficient in tipsCoefficients" value="{{ coeficient }}">{{ coeficient }}</option>
+                </select>
+            </label>
+            <ion-list>
+                <ion-item item="item" ng-repeat="tip in tipsByCoefficient">
+                    <div class="row">
+                        <div class="col-xs-3">{{ tip.startTime | date: 'HH:mm' }} </div>
+                        <div class="col-xs-9">{{tip.competition.name}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3"><img src="{{tip.homeTeam.clubLogo.url}}" style="width: 100%; height: auto; max-width: 128px;" /></div>
+                        <div class="col-xs-7">{{tip.homeTeam.name}}</div>
+                        <div class="col-xs-2">{{tip.homeTeamGoals}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3"><img src="{{tip.guestTeam.clubLogo.url}}" style="width: 100%; height: auto; max-width: 128px;" /></div>
+                        <div class="col-xs-7">{{tip.guestTeam.name}}</div>
+                        <div class="col-xs-2">{{tip.guestTeamGoals}}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-offset-3 col-xs-7">{{ tip.tipContent }}</div>
+                        <div class="col-xs-2">{{ tip.coefficient }}</div>
+                    </div>
+                </ion-item>
+            </ion-list>
+</ion-content>
+</ion-view>
