@@ -69,7 +69,13 @@
         // Load a tips dates based on existing tips in the database
         var tipsDatesPromise = myappService.getTipsDates();
         tipsDatesPromise.then(function (tipsDatesData) {
-            $scope.tipsDates = tipsDatesData;
+            var tipsDatesCollection = Array();
+            tipsDatesData.forEach(function (tipsDate) {
+                var filteredTipsDate = $filter('date')(tipsDate, 'dd MMM yyyy', '+0200');
+                tipsDatesCollection.push(filteredTipsDate);
+            });
+            
+            $scope.tipsDates = tipsDatesCollection;
         });
     }])
 

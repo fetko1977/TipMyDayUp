@@ -23,6 +23,11 @@
             }
         };
 
+        //Function to check if element exists in collection
+        var isElementExists = function (element, collection) {
+            return $.inArray(element, collection);
+        }
+
         //Boolean Function to compare two dates
         var isEqualDates = function (dateFirst, dateSeccond) {
             if (dateFirst.getDate() === dateSeccond.getDate() && dateFirst.getMonth() === dateSeccond.getMonth() && dateFirst.getFullYear === dateSeccond.getFullYear) {
@@ -197,18 +202,12 @@
                 returnedTips.forEach(function (returnedTip) {
                     var gameDate = returnedTip.gameStart.iso;
                     var tipsDate = new Date(gameDate);
-                    var filteredTipsDate = $filter('date')(tipsDate, 'dd MMM yyyy', '+0200');
-
-                    var counter = 1;
-                    var tipDateEntry = {
-                        id: counter,
-                        date: filteredTipsDate
-                    };
-                    counter++;
                     
-                    tipsDatesCollection.push(tipDateEntry);
+                    if (isElementExists(tipsDate, tipsDatesCollection) == -1) {
+                        tipsDatesCollection.push(tipsDate);
+                    }
                 })
-                
+                tipsDatesCollection.sort(function (a, b) { return b.getTime() - a.getTime() });
                 deferred.resolve(tipsDatesCollection);
             }).error(function (msg, code) {
                 deferred.reject(msg);
@@ -225,10 +224,15 @@
                 var returnedTips = returnedTipsData.results;
 
                 returnedTips.forEach(function (returnedTip) {
+
                     var tipCoefficient = returnedTip.coefficient;
 
-                    tipsCoefficientsCollection.push(tipCoefficient);
+                    if (isElementExists(tipCoefficient, tipsCoefficientsCollection) == -1) {
+                        tipsCoefficientsCollection.push(tipCoefficient);
+                    }
                 })
+                
+                tipsCoefficientsCollection.sort(function (a, b) { return a - b });
 
                 deferred.resolve(tipsCoefficientsCollection);
             }).error(function (msg, code) {

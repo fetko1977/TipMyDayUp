@@ -77,7 +77,7 @@
 }
 
 .home-content {
-    
+    background: rgba(0, 15, 85, 0.15);
 }
 
 .tips-by-date-content {
@@ -91,7 +91,9 @@
 .home-content .tips-home-items-wrapper .item,
 .tips-by-date-content .tips-by-date-items-wrapper .item {
     border: none;
-    box-shadow: 1px 1px 3px #000;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
 }
 
 .home-content .tips-home-items-wrapper .item,
@@ -107,7 +109,48 @@
 
 .home-content .tips-home-items-wrapper .tip-header,
 .tips-by-date-content .tips-by-date-items-wrapper .tip-header  {
-    background: rgba(0, 55, 125, 0.85);
+    background: rgba(47, 47, 47, 1);
     color: #fff;
     text-shadow: 1px 1px 3px #000;
+    padding: 10px 5px;
+}
+
+.home-content .tips-home-items-wrapper .tip-home-team,
+.tips-by-date-content .tips-by-date-items-wrapper .tip-home-team,
+.home-content .tips-home-items-wrapper .tip-guest-team,
+.tips-by-date-content .tips-by-date-items-wrapper .tip-guest-team {
+    padding: 10px 5px;
+}
+
+.home-content .tips-home-items-wrapper .tip-home-team,
+.tips-by-date-content .tips-by-date-items-wrapper .tip-home-team {
+    border-bottom: 1px solid rgba(47, 47, 47, 1);
+}
+
+.tip-home-team-logo,
+.tip-guest-team-logo {
+    padding: 0;
+}
+
+.tip-home-team-logo > img,
+.tip-guest-team-logo > img {
+    width: 100%;
+    max-width: 128px;
+    height: auto;
+    max-height: 128px;
+}
+
+.tip-home-team-name,
+.tip-guest-team-name {
+    padding: 0 10px;
+    line-height: 75px;
+    font-weight: bold;
+}
+
+.home-content .tips-home-items-wrapper .tip-footer,
+.tips-by-date-content .tips-by-date-items-wrapper .tip-footer  {
+    background: rgba(47, 47, 47, 1);
+    color: #fff;
+    text-shadow: 1px 1px 3px #000;
+    padding: 10px 5px;
 }
