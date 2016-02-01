@@ -1,6 +1,7 @@
 ﻿<ion-view view-title="Tips By Coefficient">
-    <ion-content class="padding">
+    <ion-content class="padding tips-by-coefficient-content">
         <ion-refresher on-refresh="refresh(true)" spinner="android"></ion-refresher>
+        <div class="list">
             <label class="item item-input item-select">
                 <span class="input-label">
                     Select Coeficient:
@@ -9,25 +10,33 @@
                     <option ng-selected="{{coeficient === coefficientSelector}}" ng-repeat="coeficient in tipsCoefficients" value="{{ coeficient }}">{{ coeficient }}</option>
                 </select>
             </label>
-            <ion-list>
+        </div>
+            <ion-list class="tips-by-coefficient-items-wrapper">
                 <ion-item item="item" ng-repeat="tip in tipsByCoefficient">
-                    <div class="row">
-                        <div class="col-xs-3">{{ tip.startTime | date: 'HH:mm' }} </div>
-                        <div class="col-xs-9">{{tip.competition.name}}</div>
+                    <div class="row tip-header">
+                        <div class="col-xs-3 tip-start-time">{{ tip.startTime | date: 'HH:mm' }} </div>
+                        <div class="col-xs-9 tip-competition-name">{{tip.competition.name}}</div>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-3"><img src="{{tip.homeTeam.clubLogo.url}}" style="width: 100%; height: auto; max-width: 128px;" /></div>
-                        <div class="col-xs-7">{{tip.homeTeam.name}}</div>
-                        <div class="col-xs-2">{{tip.homeTeamGoals}}</div>
+                    <div class="row tip-home-team">
+                        <div class="col-xs-3 tip-home-team-logo"><img src="{{tip.homeTeam.clubLogo.url}}" /></div>
+                        <div class="col-xs-7 tip-home-team-name">{{tip.homeTeam.name}}</div>
+                        <div class="col-xs-2 tip-home-team-goals">{{tip.homeTeamGoals}}</div>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-3"><img src="{{tip.guestTeam.clubLogo.url}}" style="width: 100%; height: auto; max-width: 128px;" /></div>
-                        <div class="col-xs-7">{{tip.guestTeam.name}}</div>
-                        <div class="col-xs-2">{{tip.guestTeamGoals}}</div>
+                    <div class="row tip-guest-team">
+                        <div class="col-xs-3 tip-guest-team-logo"><img src="{{tip.guestTeam.clubLogo.url}}" /></div>
+                        <div class="col-xs-7 tip-guest-team-name">{{tip.guestTeam.name}}</div>
+                        <div class="col-xs-2 tip-guest-team-goals">{{tip.guestTeamGoals}}</div>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-offset-3 col-xs-7">{{ tip.tipContent }}</div>
-                        <div class="col-xs-2">{{ tip.coefficient }}</div>
+                    <div class="row tip-footer tip-{{ tip.tipResult }}">
+                        <div class="col-xs-3 tip-result-outcome">
+                            <i class="ion-checkmark-circled"></i>
+                            <i class="ion-close-circled"></i>
+                        </div>
+                        <div class="col-xs-7 tip-content">{{ tip.tipContent }}</div>
+                        <div class="col-xs-2 tip-coeficient">{{ tip.coefficient }}</div>
+                    </div>
+                    <div class="row tip-status {{ tip.statusClass }}">
+                        <div class="col-xs-12">{{ tip.status }}</div>
                     </div>
                 </ion-item>
             </ion-list>

@@ -53,6 +53,14 @@
 
             currentTip.coefficient = coefficient;
 
+            currentTip.status = tip.status.toLowerCase().replace(/\b[a-z]/g, function (letter) {
+                return letter.toUpperCase();
+            });
+
+            currentTip.statusClass = tip.status;
+
+            currentTip.tipResult = tip.tipResult;
+
             var homeTeamPromise = getTeamById(homeTeamObjectId);
             var guestTeamPromise = getTeamById(guestTeamObjectId);
             var competitionPromise = getCompetitionById(competitionObjectId);

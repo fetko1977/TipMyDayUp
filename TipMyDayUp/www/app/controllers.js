@@ -4,6 +4,10 @@
     angular.module("tipMyDayUpApp.controllers", [])
 
     .controller("appCtrl", ["$scope", function ($scope) {
+        $scope.isMenuOpen = function () {
+            var body = $("body");
+            return body.hasClass("menu-open");
+        }
     }])
 
     //homeCtrl provides the logic for the home screen

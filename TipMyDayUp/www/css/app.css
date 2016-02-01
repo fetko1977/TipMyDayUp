@@ -28,10 +28,26 @@
     height: 80px;
 }
 
-.spinnerSpinner svg {
+.spinnerSpinner svg ]\. {
     width: 80px;
     height: 80px;
     stroke: #b59751;
+}
+
+.bar .button.button-icon .icon:before, .bar .button.button-icon:before, .bar .button.button-icon.icon-left:before, .bar .button.button-icon.icon-right:before {
+    font-size: 22px;
+}
+
+.schedualed {
+    background: rgba(255, 106, 0, 0.85);
+}
+
+.started {
+    background: rgba(0, 110, 3, 0.85);
+}
+
+.finished {
+    background: rgba(47, 47, 47, 1);
 }
 
 .bar.bar-balanced {
@@ -89,26 +105,25 @@
 }
 
 .home-content .tips-home-items-wrapper .item,
-.tips-by-date-content .tips-by-date-items-wrapper .item {
+.tips-by-date-content .tips-by-date-items-wrapper .item,
+.tips-by-coefficient-content .tips-by-coefficient-items-wrapper .item {
     border: none;
     -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
-}
-
-.home-content .tips-home-items-wrapper .item,
-.tips-by-date-content .tips-by-date-items-wrapper .item {
     padding: 0;
     margin-bottom: 10px;
 }
 
 .home-content .tips-home-items-wrapper .item .row,
-.tips-by-date-content .tips-by-date-items-wrapper .item .row {
+.tips-by-date-content .tips-by-date-items-wrapper .item .row,
+.tips-by-coefficient-content .tips-by-coefficient-items-wrapper .item .row {
     margin: 0;      
 }
 
 .home-content .tips-home-items-wrapper .tip-header,
-.tips-by-date-content .tips-by-date-items-wrapper .tip-header  {
+.tips-by-date-content .tips-by-date-items-wrapper .tip-header,
+.tips-by-coefficient-content .tips-by-coefficient-items-wrapper .tip-header {
     background: rgba(47, 47, 47, 1);
     color: #fff;
     text-shadow: 1px 1px 3px #000;
@@ -118,12 +133,15 @@
 .home-content .tips-home-items-wrapper .tip-home-team,
 .tips-by-date-content .tips-by-date-items-wrapper .tip-home-team,
 .home-content .tips-home-items-wrapper .tip-guest-team,
-.tips-by-date-content .tips-by-date-items-wrapper .tip-guest-team {
+.tips-by-date-content .tips-by-date-items-wrapper .tip-guest-team,
+.tips-by-coefficient-content .tips-by-coefficient-items-wrapper .tip-home-team,
+.tips-by-coefficient-content .tips-by-coefficient-items-wrapper .tip-guest-team  {
     padding: 10px 5px;
 }
 
 .home-content .tips-home-items-wrapper .tip-home-team,
-.tips-by-date-content .tips-by-date-items-wrapper .tip-home-team {
+.tips-by-date-content .tips-by-date-items-wrapper .tip-home-team,
+.tips-by-coefficient-content .tips-by-coefficient-items-wrapper .tip-home-team {
     border-bottom: 1px solid rgba(47, 47, 47, 1);
 }
 
@@ -147,10 +165,71 @@
     font-weight: bold;
 }
 
+.tip-home-team-goals,
+.tip-guest-team-goals {
+    padding: 0 10px;
+    line-height: 75px;
+    font-weight: bold;
+}
+
 .home-content .tips-home-items-wrapper .tip-footer,
-.tips-by-date-content .tips-by-date-items-wrapper .tip-footer  {
+.tips-by-date-content .tips-by-date-items-wrapper .tip-footer,
+.tips-by-coefficient-content .tips-by-coefficient-items-wrapper .tip-footer {
     background: rgba(47, 47, 47, 1);
     color: #fff;
     text-shadow: 1px 1px 3px #000;
     padding: 10px 5px;
+}
+
+.home-content .tips-home-items-wrapper .tip-footer div,
+.tips-by-date-content .tips-by-date-items-wrapper .tip-footer div,
+.tips-by-coefficient-content .tips-by-coefficient-items-wrapper .tip-footer div {
+    padding: 0 10px;
+}
+
+.home-content .tips-home-items-wrapper .tip-status,
+.tips-by-date-content .tips-by-date-items-wrapper .tip-status,
+.tips-by-coefficient-content .tips-by-coefficient-items-wrapper .tip-status {
+    color: #fff;
+    padding: 10px 5px;
+    text-align: right;
+}
+
+.home-content .tips-home-items-wrapper .tip-status div,
+.tips-by-date-content .tips-by-date-items-wrapper .tip-status div,
+.tips-by-coefficient-content .tips-by-coefficient-items-wrapper .tip-status div {
+    padding: 0 5px;
+    text-shadow: 1px 1px 3px #000;
+}
+
+.tip-fail {
+    background: rgba(180, 0, 3, 0.85) !important;
+}
+
+.tip-success {
+    background: rgba(0, 110, 3, 0.85) !important;
+}
+
+.tip-result-outcome {
+    text-align: center;
+}
+
+.tip-awaiting .tip-result-outcome > i {
+    display: none;
+}
+
+.tip-success .tip-result-outcome > i.ion-checkmark-circled {
+    display: block;
+}
+
+.tip-success .tip-result-outcome > i.ion-close-circled {
+    display: none;
+}
+
+.tip-fail .tip-result-outcome > i.ion-checkmark-circled {
+    display: none;
+}
+
+.tip-fail .tip-result-outcome > i.ion-close-circled {
+    display: block;
 }
