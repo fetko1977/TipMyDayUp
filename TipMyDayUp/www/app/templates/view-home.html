@@ -26,7 +26,8 @@
                     <div class="col-xs-2 tip-coeficient">{{ tip.coefficient }}</div>
                 </div>
                 <div class="row tip-status {{ tip.statusClass }}">
-                    <div class="col-xs-12">{{ tip.status }}</div>
+                    <div class="col-xs-3 tip-date">{{ tip.startTime | date: 'dd MMM yyyy' }}</div>
+                    <div class="col-xs-9">{{ tip.status }}</div>
                 </div>
             </ion-item>
         </ion-list>

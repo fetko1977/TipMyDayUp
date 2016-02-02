@@ -11,21 +11,22 @@
     }])
 
     //homeCtrl provides the logic for the home screen
-    .controller("homeCtrl", ["$scope", "$state", "myappService", function ($scope, $state, myappService) {
+    .controller("homeCtrl", ["$scope", "$state", "myappService", "getTipsDataService", function ($scope, $state, myappService, getTipsDataService) {
         $scope.todayDate = new Date();
 
-        //Getting latest tips as promise
-        var getTodayTipsPromise = myappService.getTodayTips();
-        
-        //Attach it to the scope
-        getTodayTipsPromise.then(function (tips) {
+        //Getting latest tips
+        getTipsDataService.getTodayTips().then(function (tips) {
             $scope.tips = tips;
-            //console.log($scope.tips);
         });
 
         $scope.refresh = function () {
             //refresh binding
             $scope.$broadcast("scroll.refreshComplete");
+
+            //Getting latest tips
+            getTipsDataService.getTodayTips().then(function (tips) {
+                $scope.tips = tips;
+            });
         };
     }])
 
@@ -56,50 +57,75 @@
     }])
 
     //tipsByDateCtrl managed the display of tips filtered by date
-    .controller("tipsByDateCtrl", ["$scope", "myappService", "$filter", function ($scope, myappService, $filter) {
-        // Load a tips based on selected date
-        $scope.getTipsByDate = function () {
-            var dateSelectValue = $('#tipDateSelector').val();
-            
-            var getTipsByDatePromise = myappService.getTipsByDate(dateSelectValue);
-            
-            getTipsByDatePromise.then(function (tipsByDateData) {
-                $scope.tipsByDate = tipsByDateData;
-            });
-        };
-
-        
-
+    .controller("tipsByDateCtrl", ["$scope", "myappService", "$filter", "getTipsDataService", function ($scope, myappService, $filter, getTipsDataService) {
         // Load a tips dates based on existing tips in the database
         var tipsDatesPromise = myappService.getTipsDates();
+
+        // Handling the tips dates promise
         tipsDatesPromise.then(function (tipsDatesData) {
             var tipsDatesCollection = Array();
             tipsDatesData.forEach(function (tipsDate) {
                 var filteredTipsDate = $filter('date')(tipsDate, 'dd MMM yyyy', '+0200');
                 tipsDatesCollection.push(filteredTipsDate);
             });
-            
+            $scope.selectedDate = tipsDatesCollection[0];
             $scope.tipsDates = tipsDatesCollection;
         });
+
+        // Returns promise with tips collection based on date
+        var getTipsBySelectedDate = function () {
+            return getTipsDataService.getTipsByDate();
+        };
+
+        // Handling the tips by date promise
+        getTipsBySelectedDate().then(function (tipsByDateData) {
+            $scope.tipsByDate = tipsByDateData;
+        });
+
+        // Load a tips based on selected date
+        $scope.getTipsByDate = function () {
+            getTipsBySelectedDate().then(function (tipsByDateData) {
+                $scope.tipsByDate = tipsByDateData;
+            });
+        };
+
+        $scope.refresh = function () {
+            getTipsBySelectedDate().then(function (tipsByDateData) {
+                $scope.tipsByDate = tipsByDateData;
+            });
+        }
     }])
 
     //tipsByCoefficientCtrl managed the display of tips filtered by coefficient
-    .controller("tipsByCoefficientCtrl", ["$scope", "myappService", "$filter", function ($scope, myappService, $filter) {
-
-        $scope.getTipsByCoefficient = function () {
-            var coefficientSelectedValue = $('#tipCoefficientSelector').val();
-
-            var getTipsByCoefficientPromise = myappService.getTipsByCoefficient(coefficientSelectedValue);
-            getTipsByCoefficientPromise.then(function (tipsByCoefficientData) {
-                $scope.tipsByCoefficient = tipsByCoefficientData;
-            });
-
+    .controller("tipsByCoefficientCtrl", ["$scope", "myappService", "$filter", "getTipsDataService", function ($scope, myappService, $filter, getTipsDataService) {
+        var getTipsBySelectedCoefficient = function () {
+            return getTipsDataService.getTipsByCoefficient();
         }
 
         // Load a tips coefficients based on existing tips in the database
         var tipsCoefficientsPromise = myappService.getTipsCoefficients();
+
         tipsCoefficientsPromise.then(function (tipsCoefficientsData) {
+            //console.log(tipsCoefficientsData);
+            $scope.coefficientSelector = tipsCoefficientsData[0];
             $scope.tipsCoefficients = tipsCoefficientsData;
         });
+
+        getTipsBySelectedCoefficient().then(function (tipsByCoefficientData) {
+            $scope.tipsByCoefficient = tipsByCoefficientData;
+        });
+
+        // Gets tips based on selected coefficient when user change input - ng-change directive
+        $scope.getTipsByCoefficient = function () {
+            getTipsBySelectedCoefficient().then(function (tipsByCoefficientData) {
+                $scope.tipsByCoefficient = tipsByCoefficientData;
+            });
+        }
+
+        $scope.refresh = function () {
+            getTipsBySelectedCoefficient().then(function (tipsByCoefficientData) {
+                $scope.tipsByCoefficient = tipsByCoefficientData;
+            });
+        }
     }]);
 })();

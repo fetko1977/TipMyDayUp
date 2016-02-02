@@ -1,7 +1,41 @@
 ﻿(function () {
     "use strict";
 
-    angular.module("tipMyDayUpApp.services", []).factory("myappService", ["$rootScope", "$http", "$q", "$filter", function ($rootScope, $http, $q, $filter) {
+    var servicesModule = angular.module("tipMyDayUpApp.services", []);
+
+    //Service for Authorization
+    servicesModule.factory("authorizationService", [function () {
+        return {
+            getAuthorized: function () {
+                var PARSE_APP_ID = "YybIkFE2xTV4w3JAZYnRNLWELhA1nLglmlxqH9oh";
+                var PARSE_REST_API_KEY = "gqvb52ROdHhcav4lAq7vx0qvuYQNXROWOb7u3nLB";
+
+                return {
+                    "X-Parse-Application-Id": PARSE_APP_ID,
+                    "X-Parse-REST-API-Key": PARSE_REST_API_KEY
+                }
+            }
+        }
+    }]);
+
+    //Service for all XMLHttpRequests
+    servicesModule.factory("XMLHttpRequestService", ["$http", "authorizationService", function ($http, authorizationService) {
+        return {
+            get: function (url, params) {
+                var config = {
+                    method: 'GET',
+                    headers: authorizationService.getAuthorized(),
+                    url: url,
+                    params: params
+                }
+
+                return $http(config);
+            }
+        }
+    }]);
+
+    //Service for helper functions
+    servicesModule.factory("myappService", ["$rootScope", "$http", "$q", "$filter", "authorizationService", function ($rootScope, $http, $q, $filter, authorizationService) {
         var myappService = {};
 
         //starts and stops the application waiting indicator
@@ -12,24 +46,13 @@
                 $(".spinner").hide();
         };
 
-        // Authorization Headers for Parse
-        myappService.authorizationConfig = function () {
-            var PARSE_APP_ID = "YybIkFE2xTV4w3JAZYnRNLWELhA1nLglmlxqH9oh";
-            var PARSE_REST_API_KEY = "gqvb52ROdHhcav4lAq7vx0qvuYQNXROWOb7u3nLB";
-
-            return {
-                "X-Parse-Application-Id": PARSE_APP_ID,
-                "X-Parse-REST-API-Key": PARSE_REST_API_KEY
-            }
-        };
-
         //Function to check if element exists in collection
-        var isElementExists = function (element, collection) {
-            return $.inArray(element, collection);
+        myappService.isElementExists = function (element, collection) {
+            return $.inArray(element.getTime(), collection);
         }
 
         //Boolean Function to compare two dates
-        var isEqualDates = function (dateFirst, dateSeccond) {
+        myappService.isEqualDates = function (dateFirst, dateSeccond) {
             if (dateFirst.getDate() === dateSeccond.getDate() && dateFirst.getMonth() === dateSeccond.getMonth() && dateFirst.getFullYear === dateSeccond.getFullYear) {
                 return true;
             }
@@ -37,7 +60,7 @@
         };
 
         // Format Tip Data
-        var formatTipData = function (tip) {
+        myappService.formatTipData = function (tip) {
             var competitionObjectId = tip.competition.objectId;
             var homeTeamObjectId = tip.homeTeam.objectId;
             var guestTeamObjectId = tip.guestTeam.objectId;
@@ -90,7 +113,7 @@
         myappService.getAllTips = function (params) {
             var getTipsConfig = {
                 method: 'GET',
-                headers: myappService.authorizationConfig(),
+                headers: authorizationService.getAuthorized(),
                 url: 'https://api.parse.com/1/classes/Tip',
                 params: params
             }
@@ -101,43 +124,12 @@
         myappService.getAllResults = function (params) {
             var getResultsConfig = {
                 method: 'GET',
-                headers: myappService.authorizationConfig(),
+                headers: authorizationService.getAuthorized(),
                 url: 'https://api.parse.com/1/classes/Result',
                 params: params
             }
             return $http(getResultsConfig);
         };
-
-
-
-        // Get Today Tips
-        myappService.getTodayTips = function (success) {
-            var deferred = $q.defer();
-            
-            myappService.getAllTips().success(function (returnedTipsData) {
-                var tipsCollection = Array();
-                var returnedTips = returnedTipsData.results;
-                //console.log(returnedTips);
-                returnedTips.forEach(function (returnedTip) {
-                    var gameDate = returnedTip.gameStart.iso;
-                    var gameDateStart = new Date(gameDate);
-                    var todayDate = new Date();
-
-                    if (isEqualDates(gameDateStart, todayDate)) {
-                        
-                        var currentTip = formatTipData(returnedTip)
-
-                        tipsCollection.push(currentTip);
-                    }
-
-                })
-
-                deferred.resolve(tipsCollection);
-            }).error(function (msg, code) {
-                deferred.reject(msg);
-            });
-            return deferred.promise;
-        }
 
         //Get Team by Object ID
         var getTeamById = function (id) {
@@ -146,7 +138,7 @@
 
             $http({
                 method: 'GET',
-                headers: myappService.authorizationConfig(),
+                headers: authorizationService.getAuthorized(),
                 url: teamByIdUrl
             }).success(function (data) {
                 deferred.resolve(data);
@@ -163,7 +155,7 @@
 
             $http({
                 method: 'GET',
-                headers: myappService.authorizationConfig(),
+                headers: authorizationService.getAuthorized(),
                 url: competitionByIdUrl
             }).success(function (data) {
                 deferred.resolve(data);
@@ -200,22 +192,27 @@
         }
 
         // Get All Tips Dates
-        myappService.getTipsDates = function(){
+        myappService.getTipsDates = function () {
             var deferred = $q.defer();
 
             myappService.getAllTips().success(function (returnedTipsData) {
                 var tipsDatesCollection = Array();
                 var returnedTips = returnedTipsData.results;
-                
+
                 returnedTips.forEach(function (returnedTip) {
                     var gameDate = returnedTip.gameStart.iso;
                     var tipsDate = new Date(gameDate);
-                    
-                    if (isElementExists(tipsDate, tipsDatesCollection) == -1) {
+
+                    if (myappService.isElementExists(tipsDate, tipsDatesCollection) == -1) {
+                        console.log(myappService.isElementExists(tipsDate, tipsDatesCollection));
                         tipsDatesCollection.push(tipsDate);
                     }
                 })
+
+                //Sort
                 tipsDatesCollection.sort(function (a, b) { return b.getTime() - a.getTime() });
+
+                //Resolve
                 deferred.resolve(tipsDatesCollection);
             }).error(function (msg, code) {
                 deferred.reject(msg);
@@ -235,11 +232,11 @@
 
                     var tipCoefficient = returnedTip.coefficient;
 
-                    if (isElementExists(tipCoefficient, tipsCoefficientsCollection) == -1) {
+                    if (myappService.isElementExists(tipCoefficient, tipsCoefficientsCollection) == -1) {
                         tipsCoefficientsCollection.push(tipCoefficient);
                     }
                 })
-                
+
                 tipsCoefficientsCollection.sort(function (a, b) { return a - b });
 
                 deferred.resolve(tipsCoefficientsCollection);
@@ -249,66 +246,115 @@
             return deferred.promise;
         }
 
-        // Get tips by date
-        myappService.getTipsByDate = function (date) {
-            var deferred = $q.defer();
-
-            var params = {
-                data: date
-            };
-
-            myappService.getAllTips(params).success(function (returnedTipsData) {
-                var tipsCollection = Array();
-                var returnedTips = returnedTipsData.results;
-
-                returnedTips.forEach(function (tip) {
-                    var searchedDate = new Date(params.data);
-                    var tipDate = new Date(tip.gameStart.iso);
-
-                    if (isEqualDates(searchedDate, tipDate)) {
-                        var currentTip = formatTipData(tip)
-
-                        tipsCollection.push(currentTip);
-                    }
-                });
-
-                deferred.resolve(tipsCollection);
-            }).error(function (msg, code) {
-                deferred.reject(msg);
-            });
-            return deferred.promise;
-        };
-
-        // Get tips by coefficient
-        myappService.getTipsByCoefficient = function (coefficient) {
-            var deferred = $q.defer();
-
-            var params = {
-                coefficient: coefficient
-            };
-
-            myappService.getAllTips(params).success(function (returnedTipsData) {
-                var tipsCollection = Array();
-                var returnedTips = returnedTipsData.results;
-
-                returnedTips.forEach(function (tip) {
-                    var searchedCoefficient = params.coefficient;
-                    var tipCoefficient = tip.coefficient;
-
-                    if (searchedCoefficient == tipCoefficient) {
-                        var currentTip = formatTipData(tip)
-
-                        tipsCollection.push(currentTip);
-                    }
-                });
-
-                deferred.resolve(tipsCollection);
-            }).error(function (msg, code) {
-                deferred.reject(msg);
-            });
-            return deferred.promise;
-        };
-
         return myappService;
+    }]);
+
+    //Service to get tips data
+    servicesModule.factory("getTipsDataService", ["$rootScope", "$http", "$q", "$filter", "XMLHttpRequestService", "myappService", function ($rootScope, $http, $q, $filter, XMLHttpRequestService, myappService) {
+        return {
+
+            getAllTips: function(){
+                var deferred = $q.defer();
+
+                var url = 'https://api.parse.com/1/classes/Tip';
+
+                XMLHttpRequestService.get(url).success(function (returnedTipsData) {
+                    deferred.resolve(returnedTipsData);
+                }).error(function (msg, code) {
+                    deferred.reject(msg);
+                });
+                return deferred.promise;
+            },
+
+            getTodayTips: function () {
+                var deferred = $q.defer();
+
+                var url = 'https://api.parse.com/1/classes/Tip';
+
+                XMLHttpRequestService.get(url).success(function (returnedTipsData) {
+                    var tipsCollection = Array();
+                    var returnedTips = returnedTipsData.results;
+                    //console.log(returnedTips);
+                    returnedTips.forEach(function (returnedTip) {
+                        var gameDate = returnedTip.gameStart.iso;
+                        var gameDateStart = new Date(gameDate);
+                        var todayDate = new Date();
+
+                        if (myappService.isEqualDates(gameDateStart, todayDate)) {
+
+                            var currentTip = myappService.formatTipData(returnedTip);
+
+                            tipsCollection.push(currentTip);
+                        }
+
+                    })
+                    //console.log(tipsCollection);
+                    deferred.resolve(tipsCollection);
+                }).error(function (msg, code) {
+                    deferred.reject(msg);
+                });
+                return deferred.promise;
+            },
+
+            getTipsByDate: function () {
+                var deferred = $q.defer();
+
+                var url = 'https://api.parse.com/1/classes/Tip';
+
+                XMLHttpRequestService.get(url).success(function (returnedTipsData) {
+                    var tipsByDateCollection = Array();
+                    var returnedTips = returnedTipsData.results;
+
+                    returnedTips.forEach(function (returnedTip) {
+                        var selectedDateValue = $('#tipDateSelector').val();
+                        var gameDate = returnedTip.gameStart.iso;
+                        var gameDateStart = new Date(gameDate);
+                        var paramsDate = new Date(selectedDateValue);
+
+                        if (myappService.isEqualDates(gameDateStart, paramsDate)) {
+
+                            var currentTip = myappService.formatTipData(returnedTip);
+
+                            tipsByDateCollection.push(currentTip);
+                        }
+
+                    })
+
+                    deferred.resolve(tipsByDateCollection);
+                }).error(function (msg, code) {
+                    deferred.reject(msg);
+                });
+                return deferred.promise;
+            },
+
+            getTipsByCoefficient: function () {
+                var deferred = $q.defer();
+
+                var url = 'https://api.parse.com/1/classes/Tip';
+
+                XMLHttpRequestService.get(url).success(function (returnedTipsData) {
+                    var tipsByCoefficientCollection = Array();
+                    var returnedTips = returnedTipsData.results;
+
+                    returnedTips.forEach(function (returnedTip) {
+                        var selectedCoefficientValue = $('#tipCoefficientSelector').val();
+                        var tipCoefficient = returnedTip.coefficient;
+
+                        if (selectedCoefficientValue == tipCoefficient) {
+
+                            var currentTip = myappService.formatTipData(returnedTip);
+
+                            tipsByCoefficientCollection.push(currentTip);
+                        }
+
+                    })
+
+                    deferred.resolve(tipsByCoefficientCollection);
+                }).error(function (msg, code) {
+                    deferred.reject(msg);
+                });
+                return deferred.promise;
+            }
+        }
     }]);
 })();

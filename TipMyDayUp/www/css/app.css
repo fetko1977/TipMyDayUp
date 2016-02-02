@@ -92,6 +92,14 @@
     background: rgba(65, 65, 65, 1);
 }
 
+.tips-selected-date-header {
+    background: rgba(0, 3, 110, 0.85);
+    color: #fff;
+    text-shadow: 1px 1px 3px #000;
+    margin: 0 0 10px;
+    text-align: center;
+}
+
 .home-content {
     background: rgba(0, 15, 85, 0.15);
 }
@@ -148,27 +156,28 @@
 .tip-home-team-logo,
 .tip-guest-team-logo {
     padding: 0;
+    text-align: center;
 }
 
 .tip-home-team-logo > img,
 .tip-guest-team-logo > img {
     width: 100%;
-    max-width: 128px;
+    max-width: 32px;
     height: auto;
-    max-height: 128px;
+    max-height: 32px;
 }
 
 .tip-home-team-name,
 .tip-guest-team-name {
     padding: 0 10px;
-    line-height: 75px;
+    line-height: 32px;
     font-weight: bold;
 }
 
 .tip-home-team-goals,
 .tip-guest-team-goals {
     padding: 0 10px;
-    line-height: 75px;
+    line-height: 32px;
     font-weight: bold;
 }
 
@@ -232,4 +241,23 @@
 
 .tip-fail .tip-result-outcome > i.ion-close-circled {
     display: block;
+}
+
+/*----Select Inputs-------*/
+
+.item.item-input.item-select {
+    background: rgba(47, 47, 47, 1);
+    padding: 10px 5px;
+}
+
+.item.item-input.item-select .input-label {
+    background: rgba(47, 47, 47, 1);
+    color: #fff;
+    text-shadow: 1px 1px 3px #000;
+}
+
+.item.item-input.item-select select {
+    background: rgba(47, 47, 47, 1);
+    color: #fff;
+    text-shadow: 1px 1px 3px #000;
 }
