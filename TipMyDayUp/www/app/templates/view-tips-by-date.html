@@ -1,16 +1,13 @@
 ﻿<ion-view view-title="Tips By Date">
     <ion-content class="padding tips-by-date-content">
         <ion-refresher on-refresh="refresh(true)" spinner="android"></ion-refresher>
-        <div class="list">
+        <div class="list form-group tips-date-select-wrapper">
 
-            <label class="item item-input item-select">
-                <span class="input-label">
-                    Select Date:
-                </span>
-                <select id="tipDateSelector" ng-model="selectedDate" ng-change="getTipsByDate()">
-                    <option ng-selected="{{ selectedDate === tipsDate }}" ng-repeat="tipsDate in tipsDates" value="{{ tipsDate }}">{{ tipsDate }}</option>
-                </select>
-            </label>
+            <label for="tipDateSelector" class="tip-dates-selector-label">Selected Date:</label>
+            <select id="tipDateSelector" ng-model="selectedDate" ng-change="getTipsByDate()" class="form-control">
+                <option ng-selected="{{ selectedDate === tipsDate }}" ng-repeat="tipsDate in tipsDates" value="{{ tipsDate }}">{{ tipsDate }}</option>
+            </select>
+            
         </div>
         <ion-list class="tips-by-date-items-wrapper">
             <ion-item item="item" ng-repeat="tip in tipsByDate">

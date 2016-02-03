@@ -1,4 +1,5 @@
-﻿(function () {
+﻿/// <reference path="services.js" />
+(function () {
     "use strict";
 
     angular.module("tipMyDayUpApp.controllers", [])
@@ -14,19 +15,41 @@
     .controller("homeCtrl", ["$scope", "$state", "myappService", "getTipsDataService", function ($scope, $state, myappService, getTipsDataService) {
         $scope.todayDate = new Date();
 
-        //Getting latest tips
-        getTipsDataService.getTodayTips().then(function (tips) {
-            $scope.tips = tips;
+        //Getting today tips coefficient
+        myappService.getTodayTipsCoefficients().then(function (todayTipsCoefficientData) {
+            $scope.tipsCoefficients = todayTipsCoefficientData;
+            $scope.selectedTipCoefficientOption = 0;
+            //Getting today tips filtered by selected coefficient. Default is all today tips.
+            getTipsDataService.getTodayTipsByCoefficient().then(function (returnedTipsData) {
+                $scope.tips = returnedTipsData;
+            });
         });
 
+        
+
+        //Getting Today tips filtered by selected coefficient when option is changed
+        $scope.getTodayTipsByCoefficient = function () {
+            getTipsDataService.getTodayTipsByCoefficient().then(function (returnedTipsData) {
+                $scope.tips = returnedTipsData;
+            });
+        }
+        
+        //On device refresh
         $scope.refresh = function () {
+            //$("#todayTipCoefficientSelector").val("0");
+
+            //Getting today tips coefficient
+            myappService.getTodayTipsCoefficients().then(function (todayTipsCoefficientData) {
+                $scope.tipsCoefficients = todayTipsCoefficientData;
+                $("#todayTipCoefficientSelector").val("0");
+                //Getting today tips filtered by selected coefficient. Default is all today tips.
+                getTipsDataService.getTodayTipsByCoefficient().then(function (returnedTipsData) {
+                    $scope.tips = returnedTipsData;
+                });
+            });
+
             //refresh binding
             $scope.$broadcast("scroll.refreshComplete");
-
-            //Getting latest tips
-            getTipsDataService.getTodayTips().then(function (tips) {
-                $scope.tips = tips;
-            });
         };
     }])
 
@@ -63,13 +86,8 @@
 
         // Handling the tips dates promise
         tipsDatesPromise.then(function (tipsDatesData) {
-            var tipsDatesCollection = Array();
-            tipsDatesData.forEach(function (tipsDate) {
-                var filteredTipsDate = $filter('date')(tipsDate, 'dd MMM yyyy', '+0200');
-                tipsDatesCollection.push(filteredTipsDate);
-            });
-            $scope.selectedDate = tipsDatesCollection[0];
-            $scope.tipsDates = tipsDatesCollection;
+            $scope.selectedDate = tipsDatesData[0];
+            $scope.tipsDates = tipsDatesData;
         });
 
         // Returns promise with tips collection based on date

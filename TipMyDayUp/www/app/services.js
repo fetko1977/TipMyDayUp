@@ -48,7 +48,7 @@
 
         //Function to check if element exists in collection
         myappService.isElementExists = function (element, collection) {
-            return $.inArray(element.getTime(), collection);
+            return $.inArray(element, collection);
         }
 
         //Boolean Function to compare two dates
@@ -200,17 +200,18 @@
                 var returnedTips = returnedTipsData.results;
 
                 returnedTips.forEach(function (returnedTip) {
-                    var gameDate = returnedTip.gameStart.iso;
-                    var tipsDate = new Date(gameDate);
+                    var returnedTipGameDate = returnedTip.gameStart.iso;
+                    var tipsDate = new Date(returnedTipGameDate);
+                    var filteredTipsGameDate = $filter('date')(tipsDate, 'dd MMM yyyy', '+0200');
+                    
 
-                    if (myappService.isElementExists(tipsDate, tipsDatesCollection) == -1) {
-                        console.log(myappService.isElementExists(tipsDate, tipsDatesCollection));
-                        tipsDatesCollection.push(tipsDate);
+                    if ($.inArray(filteredTipsGameDate, tipsDatesCollection) == -1) {
+                        tipsDatesCollection.push(filteredTipsGameDate);
                     }
                 })
 
                 //Sort
-                tipsDatesCollection.sort(function (a, b) { return b.getTime() - a.getTime() });
+                tipsDatesCollection.sort(function (a, b) { return new Date(b).getTime() - new Date(a).getTime() });
 
                 //Resolve
                 deferred.resolve(tipsDatesCollection);
@@ -240,6 +241,36 @@
                 tipsCoefficientsCollection.sort(function (a, b) { return a - b });
 
                 deferred.resolve(tipsCoefficientsCollection);
+            }).error(function (msg, code) {
+                deferred.reject(msg);
+            });
+            return deferred.promise;
+        }
+
+        // Get Today Tips Coefficients
+        myappService.getTodayTipsCoefficients = function () {
+            var deferred = $q.defer();
+
+            myappService.getAllTips().success(function (returnedTipsData) {
+                var todayTipsCoefficientsCollection = Array();
+                var returnedTips = returnedTipsData.results;
+
+                returnedTips.forEach(function (returnedTip) {
+                    var tipDate = new Date(returnedTip.gameStart.iso);
+                    var todayDate = new Date();
+
+                    if (myappService.isEqualDates(tipDate, todayDate)) {
+                        var tipCoefficient = returnedTip.coefficient;
+
+                        if (myappService.isElementExists(tipCoefficient, todayTipsCoefficientsCollection) == -1) {
+                            todayTipsCoefficientsCollection.push(tipCoefficient);
+                        }
+                    }
+                })
+
+                todayTipsCoefficientsCollection.sort(function (a, b) { return a - b });
+
+                deferred.resolve(todayTipsCoefficientsCollection);
             }).error(function (msg, code) {
                 deferred.reject(msg);
             });
@@ -350,6 +381,44 @@
                     })
 
                     deferred.resolve(tipsByCoefficientCollection);
+                }).error(function (msg, code) {
+                    deferred.reject(msg);
+                });
+                return deferred.promise;
+            },
+
+            getTodayTipsByCoefficient: function () {
+                var deferred = $q.defer();
+
+                var url = 'https://api.parse.com/1/classes/Tip';
+
+                XMLHttpRequestService.get(url).success(function (returnedTipsData) {
+                    var todayTipsByCoefficientCollection = Array();
+                    var returnedTips = returnedTipsData.results;
+
+                    returnedTips.forEach(function (returnedTip) {
+                        var returnedTipDate = new Date(returnedTip.gameStart.iso);
+                        var todayDate = new Date();
+
+                        if (myappService.isEqualDates(returnedTipDate, todayDate)) {
+                            var selectedCoefficientValue = $('#todayTipCoefficientSelector').val();
+                            //console.log(selectedCoefficientValue);
+                            var tipCoefficient = returnedTip.coefficient;
+
+                            if (selectedCoefficientValue == 0) {
+                                selectedCoefficientValue = tipCoefficient;
+                            }
+
+                            if (selectedCoefficientValue == tipCoefficient) {
+
+                                var currentTip = myappService.formatTipData(returnedTip);
+
+                                todayTipsByCoefficientCollection.push(currentTip);
+                            }
+                        }
+                    })
+
+                    deferred.resolve(todayTipsByCoefficientCollection);
                 }).error(function (msg, code) {
                     deferred.reject(msg);
                 });

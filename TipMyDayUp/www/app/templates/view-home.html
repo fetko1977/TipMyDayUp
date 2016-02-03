@@ -1,6 +1,13 @@
-﻿<ion-view view-title="{{ todayDate | date:'dd MMM yyyy' }}">
+﻿<ion-view view-title="Today Tips">
     <ion-content class="padding home-content">
         <ion-refresher on-refresh="refresh(true)" spinner="android"></ion-refresher>
+        <div class="list form-group tips-coefficient-select-wrapper">
+            <label for="todayTipCoefficientSelector" class="tip-coefficient-selector-label">Filter By Coefficient:</label>
+            <select name="tipCoefficientSelector" id="todayTipCoefficientSelector" ng-model="selectedTipCoefficientOption" ng-change="getTodayTipsByCoefficient()" class="form-control">
+                <option id="home-tips-coefficient-default" ng-selected="{{ selectedTipCoefficientOption == 0 }}" value="0">Select Coefficient</option>
+                <option ng-selected="{{ selectedTipCoefficientOption == coeficient }}" ng-repeat="coeficient in tipsCoefficients" value="{{ coeficient }}">{{ coeficient }}</option>
+            </select>
+        </div>
         <ion-list class="tips-home-items-wrapper">
             <ion-item item="item" ng-repeat="tip in tips">
                 <div class="row tip-header">

@@ -1,15 +1,11 @@
 ﻿<ion-view view-title="Tips By Coefficient">
     <ion-content class="padding tips-by-coefficient-content">
         <ion-refresher on-refresh="refresh(true)" spinner="android"></ion-refresher>
-        <div class="list">
-            <label class="item item-input item-select">
-                <span class="input-label">
-                    Select Coeficient:
-                </span>
-                <select name="tipCoefficientSelector" id="tipCoefficientSelector" ng-model="coefficientSelector" ng-change="getTipsByCoefficient()">
-                    <option ng-selected="{{coeficient === coefficientSelector}}" ng-repeat="coeficient in tipsCoefficients" value="{{ coeficient }}">{{ coeficient }}</option>
-                </select>
-            </label>
+        <div class="list form-group tips-coefficient-select-wrapper">
+            <label for="tipCoefficientSelector" class="tip-coefficient-selector-label">Selected Coeficient:</label>
+            <select name="tipCoefficientSelector" id="tipCoefficientSelector" ng-model="coefficientSelector" ng-change="getTipsByCoefficient()" class="form-control">
+                <option ng-selected="{{coeficient === coefficientSelector}}" ng-repeat="coeficient in tipsCoefficients" value="{{ coeficient }}">{{ coeficient }}</option>
+            </select>
         </div>
             <ion-list class="tips-by-coefficient-items-wrapper">
                 <ion-item item="item" ng-repeat="tip in tipsByCoefficient">
